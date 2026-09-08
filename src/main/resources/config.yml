@@ -1,0 +1,52 @@
+# NexusGate configuration.
+# The password itself is NEVER stored here -- see password.yml (generated
+# automatically the first time you run /nexusgate setpassword). This file
+# only holds behavior settings.
+
+settings:
+  # How long (seconds) a player has to type /login <password> before being kicked.
+  timeout-seconds: 60
+  # Wrong passwords allowed before the player is kicked and the IP is locked out.
+  max-attempts: 3
+  # If true, players with OP are still forced through the gate like everyone else.
+  # Recommended to leave this false (i.e. ops NOT exempt) unless you trust your
+  # own account being compromised is a non-issue.
+  exempt-operators: false
+  # Since v0.2.0, Bedrock/Xbox players are gated too -- with their OWN separate password (set
+  # via /nexusgate setpassword bedrock <password>), independent of the Java one. Set this to
+  # true if you'd rather go back to the old v0.1.0 behavior and let Bedrock/Xbox players skip
+  # the gate entirely (detected via Floodgate, or a UUID-version fallback if Floodgate isn't
+  # installed). NOTE: if you're upgrading from v0.1.0, your existing config.yml already has
+  # this set to "true" on disk from before -- change it to "false" here if you actually want
+  # Bedrock/Xbox players gated now, then set their password.
+  exempt-bedrock: false
+  # UUIDs (with dashes) that always skip the gate, e.g. your own admin accounts.
+  # Anyone with the nexusgate.bypass permission also skips it automatically.
+  trusted-uuids: []
+
+# Escalating lockout durations (seconds) applied to an IP after it fails the
+# gate (3 wrong passwords, or a timeout). 1st offense uses the 1st value, 2nd
+# offense the 2nd value, etc.; stays at the last value after that. Lockouts
+# are checked before the player even finishes connecting. Reset on server
+# restart (in-memory only).
+lockout:
+  durations-seconds: [120, 300, 900, 1800, 3600]
+
+messages:
+  gate-title: "&c&lLOCKED"
+  gate-subtitle: "&fType /login <password>"
+  gate-chat: "&cThis server requires a password to play. Type &f/login <password>&c within &f{timeout}s&c."
+  wrong-password: "&cWrong password. &f{remaining}&c attempt(s) remaining."
+  success: "&aPassword accepted. Welcome!"
+  timeout-kick: "&cYou took too long to authenticate."
+  too-many-attempts-kick: "&cToo many wrong passwords."
+  locked-out-kick: "&cToo many failed attempts from your connection. Try again in {remaining}."
+  no-password-configured-warning: "[NexusGate] No {kind} password is set! Run /nexusgate setpassword {kind} <password> (from console) or the gate does nothing for that platform. Players are joining unguarded right now."
+  not-pending: "&7You're already authenticated."
+  usage-login: "&cUsage: /login <password>"
+  must-authenticate-first: "&cYou must authenticate first. Type &f/login <password>"
+
+logging:
+  enabled: true
+  # Path is relative to the plugin's own data folder (plugins/NexusGate/).
+  file: "auth-log.txt"
